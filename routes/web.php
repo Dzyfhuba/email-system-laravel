@@ -24,4 +24,4 @@ Route::get('/logout', function () {
 })->name('logout');
 
 Route::get('/mail', [MailController::class, 'index'])->name('mail');
-
+Route::post('/mail/post', [MailController::class, 'post'])->name('mail.post');

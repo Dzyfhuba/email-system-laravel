@@ -16,9 +16,11 @@
 </head>
 
 <body class="bg-dark">
+    <a name="logout" id="logout" class="btn btn-light" href="{{ route('logout') }}" role="button">Logout</a>
+    @include('write')
     <div class="container-fluid py-2">
         <table class="table table-striped table-hover table-dark table-bordered table-responsive w-100">
-            <thead class="thead-inverse">
+            <thead class="thead-inverse sticky-top">
                 <tr>
                     <th>From</th>
                     <th>Subject</th>

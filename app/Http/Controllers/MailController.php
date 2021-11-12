@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendMail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Webklex\PHPIMAP\ClientManager;
 
 class MailController extends Controller
@@ -19,6 +22,39 @@ class MailController extends Controller
         return view('mail', [
             'mails' => $mails
         ]);
+    }
+
+    public function post(Request $request)
+    {
+        // dd($request, $request->session()->get('auth'));
+        $auth = $request->session()->get('auth');
+
+        $to_email = $request->to;
+        $data = array("body" => $request->content);
+
+        foreach ($request->file as $id => $f) {
+            Storage::put('attach', $f);
+        }
+
+        config(['MAIL_MAILER' => 'smtp']);
+        config(['MAIL_HOST' => 'smtp.gmail.com']);
+        config(['MAIL_PORT' => 465]);
+        config(['MAIL_USERNAME' => $auth['email']]);
+        config(['MAIL_PASSWORD' => $auth['password']]);
+        config(['MAIL_ENCRYPTION' => $auth['encryption']]);
+        config(['MAIL_FROM_ADDRESS' => $auth['email']]);
+        config(['MAIL_FROM_NAME' => $auth['email']]);
+
+        $email = $request->email;
+        $subject = $request->subject;
+        $content = $request->content;
+
+
+        Mail::send('mail_content', ['email' => $email, 'subject' => $subject, 'content' => $content], function ($message) {
+
+            $message->to('email')->subject($subject);
+        });
+        return redirect()->back();
     }
 
     public function getMail($request)
@@ -84,12 +120,13 @@ class MailController extends Controller
 
         return $mails;
     }
-    public function arraySortByColumn(&$arr, $col, $direction = SORT_DESC) {
+    public function arraySortByColumn(&$arr, $col, $direction = SORT_DESC)
+    {
         $sort_col = array();
-        foreach ($arr as $key=> $row) {
+        foreach ($arr as $key => $row) {
             $sort_col[$key] = $row[$col];
         }
 
-        array_multisort($sort_col, $direction , $arr);
-     }
+        array_multisort($sort_col, $direction, $arr);
+    }
 }
