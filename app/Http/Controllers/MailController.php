@@ -50,9 +50,10 @@ class MailController extends Controller
         $content = $request->content;
 
 
-        Mail::send('mail_content', ['email' => $email, 'subject' => $subject, 'content' => $content], function ($message) {
+        Mail::send('mail_content', ['email' => $email, 'subject' => $subject, 'content' => $content],
+        function ($message) use ($email, $subject) {
 
-            $message->to('email')->subject($subject);
+            $message->to($email)->subject($subject);
         });
         return redirect()->back();
     }

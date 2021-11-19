@@ -6,7 +6,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
-    <form action="{{ route('mail.post') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('mail.post') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
