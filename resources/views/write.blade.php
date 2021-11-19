@@ -28,8 +28,8 @@
                             aria-describedby="subject" required>
                     </div>
                     <div class="form-group">
-                        <label for="content">Message</label>
-                        <textarea class="form-control" name="content" id="content"></textarea>
+                        <label for="message">Message</label>
+                        <textarea class="form-control" name="message" id="message"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="file">Attach File</label>

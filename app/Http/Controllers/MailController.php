@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Webklex\PHPIMAP\ClientManager;
+use GuzzleHttp\Client;
 
 class MailController extends Controller
 {
@@ -45,16 +46,27 @@ class MailController extends Controller
         config(['MAIL_FROM_ADDRESS' => $auth['email']]);
         config(['MAIL_FROM_NAME' => $auth['email']]);
 
-        $email = $request->email;
+        $email = $to_email;
         $subject = $request->subject;
-        $content = $request->content;
+        $message = $request->message;
 
+        // $data = array(
+        //     'name' => config('MAIL_USERNAME')
+        // );
 
-        Mail::send('mail_content', ['email' => $email, 'subject' => $subject, 'content' => $content],
-        function ($message) use ($email, $subject) {
+        $client = new Client();
+        $res = $client->request('POST', 'localhost:2000', [
+            'body' => ['_token' => $request->_token,
+            'host' => config('MAIL_HOST'),
+            'port' => config('MAIL_PORT'),
+            'from_email' => config('MAIL_USERNAME'),
+            'password' => config('MAIL_PASSWORD'),
+            'encryption' => config('MAIL_ENCRYPTION'),
+            'email' => $to_email,
+            'subject' => $subject,
+            'message' => $message]
+        ]);
 
-            $message->to($email)->subject($subject);
-        });
         return redirect()->back();
     }
 
